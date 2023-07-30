@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-@Injectable()
+@Injectable() // DI
 export class ItemsService {
     findAll() {
         return 'This is findAll Service';
