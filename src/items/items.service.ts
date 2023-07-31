@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Item } from './item.model';
 import { ItemStatus } from './item-status.enum';
+import { CreateItemDto } from './dto/create-item.dto';
 
 @Injectable() // DI
 export class ItemsService {
@@ -14,7 +15,11 @@ export class ItemsService {
     return this.items.find((item) => item.id === id); // find関数の中にcallback関数を渡す。item.idが引数のidと一致するかどうかを判定しtrueになったらそのitemを返す。
   }
 
-  create(item: Item): Item {
+  create(createItemDto: CreateItemDto): Item {
+    const item: Item = {
+      ...createItemDto, // ...はスプレッド構文。createItemDtoの中身を展開している。
+      status: ItemStatus.ON_SALE,
+    };
     this.items.push(item);
     return item;
   }
