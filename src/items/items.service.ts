@@ -24,4 +24,9 @@ export class ItemsService {
     item.status = ItemStatus.SOLD_OUT;
     return item;
   }
+
+  delete(id: string): void {
+    // filterメソッドは特定の値以外を残すという考え方。
+    this.items = this.items.filter((item) => item.id !== id); // ここではitem.idが引数のidと一致しないものだけを残すという意味。
+  }
 }
