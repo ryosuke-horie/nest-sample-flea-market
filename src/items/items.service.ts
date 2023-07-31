@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Item } from './item.model';
 import { ItemStatus } from './item-status.enum';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -13,7 +13,11 @@ export class ItemsService {
   }
 
   findById(id: string): Item {
-    return this.items.find((item) => item.id === id); // find関数の中にcallback関数を渡す。item.idが引数のidと一致するかどうかを判定しtrueになったらそのitemを返す。
+    const found = this.items.find((item) => item.id === id); // find関数の中にcallback関数を渡す。item.idが引数のidと一致するかどうかを判定しtrueになったらそのitemを返す。
+    if(!found) {
+      throw new NotFoundException();
+    }
+    return found;
   }
 
   create(createItemDto: CreateItemDto): Item {
