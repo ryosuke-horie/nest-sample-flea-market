@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Item } from './item.model';
+import { Item } from '../entities/item.entity';
 import { ItemStatus } from './item-status.enum';
 import { CreateItemDto } from './dto/create-item.dto';
-import { v4 as uuid } from 'uuid';
+import { ItemRepository } from './item.repository';
 
 @Injectable() // DI
 export class ItemsService {
+  constructor (private readonly itemRepository: ItemRepository) {} // Di
+
   private items: Item[] = [];
 
   findAll(): Item[] {
@@ -20,14 +22,8 @@ export class ItemsService {
     return found;
   }
 
-  create(createItemDto: CreateItemDto): Item {
-    const item: Item = {
-      id: uuid(),
-      ...createItemDto, // ...はスプレッド構文。createItemDtoの中身を展開している。
-      status: ItemStatus.ON_SALE,
-    };
-    this.items.push(item);
-    return item;
+  async create(createItemDto: CreateItemDto): Promise<Item> { // DB操作が非同期のためasyncをつける。Promiseを返すのでPromise<Item>とする。
+    return await this.itemRepository.createItem(createItemDto); // 非同期なのでawaitをつける。
   }
 
   updateStatus(id: string): Item {
