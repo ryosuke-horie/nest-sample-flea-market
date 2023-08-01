@@ -1,26 +1,26 @@
-import { ItemStatus } from "src/items/item-status.enum";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ItemStatus } from 'src/items/item-status.enum';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('items')
 export class Item {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    price: number;
+  @Column()
+  price: number;
 
-    @Column()
-    description: string;
+  @Column()
+  description: string;
 
-    @Column()
-    status: ItemStatus
+  @Column()
+  status: ItemStatus;
 
-    @Column()
-    createdAt: string;
+  @Column()
+  createdAt: string;
 
-    @Column()
-    updatedAt: string;
+  @Column()
+  updatedAt: string;
 }
