@@ -10,12 +10,12 @@ export class ItemsService {
 
   private items: Item[] = [];
 
-  findAll(): Item[] {
-    return this.items;
+  async findAll(): Promise<Item[]> {
+    return await this.itemRepository.find();
   }
 
-  findById(id: string): Item {
-    const found = this.items.find((item) => item.id === id); // find関数の中にcallback関数を渡す。item.idが引数のidと一致するかどうかを判定しtrueになったらそのitemを返す。
+  async findById(id: string): Promise<Item> {
+    const found = await this.itemRepository.findOne(id);
     if(!found) {
       throw new NotFoundException();
     }
@@ -26,11 +26,11 @@ export class ItemsService {
     return await this.itemRepository.createItem(createItemDto); // 非同期なのでawaitをつける。
   }
 
-  updateStatus(id: string): Item {
-    const item = this.findById(id);
-    item.status = ItemStatus.SOLD_OUT;
-    return item;
-  }
+  // updateStatus(id: string): Item {
+  //   const item = this.findById(id);
+  //   item.status = ItemStatus.SOLD_OUT;
+  //   return item;
+  // }
 
   delete(id: string): void {
     // filterメソッドは特定の値以外を残すという考え方。
