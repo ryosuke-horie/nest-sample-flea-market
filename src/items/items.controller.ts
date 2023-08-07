@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,15 +9,19 @@ import {
   Patch,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { Item } from '../entities/item.entity';
 import { ItemsService } from './items.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { GetUser } from 'src/auth/decorator/get-user.decorater';
+import { User } from 'src/entities/user.entity';
 
 @Controller('items')
+@UseInterceptors(ClassSerializerInterceptor) // responseを返す前に、passwordを除外する
 export class ItemsController {
-  constructor(private readonly itemsService: ItemsService) {}
+  constructor(private readonly itemsService: ItemsService) { }
 
   @Get()
   async findAll(): Promise<Item[]> {
@@ -30,8 +35,12 @@ export class ItemsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@Body() createItemDto: CreateItemDto): Promise<Item> {
-    return await this.itemsService.create(createItemDto);
+  async create(
+    @Body() createItemDto: CreateItemDto,
+    @GetUser() user: User,
+  ): Promise<Item> {
+    console.log(user);
+    return await this.itemsService.create(createItemDto, user);
   }
 
   @Patch(':id')
